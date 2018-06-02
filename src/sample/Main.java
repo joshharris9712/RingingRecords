@@ -14,7 +14,8 @@ public class Main extends Application {
         //s.scrape();
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Ringing Records");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 600, 200));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
