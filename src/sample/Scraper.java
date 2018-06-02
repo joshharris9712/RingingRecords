@@ -19,28 +19,46 @@ public class Scraper {
 	}
 
 	public void scrape() throws IOException {
+
+		boolean morePages;
+		int pageNumber = 1;
+
 		URL u;
 		InputStreamReader is = null;
 		BufferedReader b;
-
-		u = new URL(url);
-		is = new InputStreamReader(u.openStream());
-		b = new BufferedReader(is);
-
-		String inputLine;
 		List<String> list = new ArrayList<String>();
-		while((inputLine = b.readLine())!=null){
-			if(inputLine.contains("href=\"view.php?id=")){
-				String id = inputLine.substring(inputLine.indexOf("id=")+3, inputLine.lastIndexOf('"'));
-				list.add(id);
-				//System.out.println(id);
+
+		do {
+			morePages = false;
+			u = new URL(url + (pageNumber>1? "&page=" + pageNumber : ""));
+
+			is = new InputStreamReader(u.openStream());
+			b = new BufferedReader(is);
+
+			String inputLine;
+
+			while ((inputLine = b.readLine()) != null) {
+				if (inputLine.contains("href=\"view.php?id=")) {
+					String id = inputLine.substring(inputLine.indexOf("id=") + 3, inputLine.lastIndexOf('"'));
+					list.add(id);
+				}
+
+				if (inputLine.contains("page=")) {
+					String numStr = inputLine.substring(inputLine.indexOf("page=") + 5, inputLine.lastIndexOf('"'));
+					if(Integer.valueOf(numStr) > pageNumber){
+						morePages = true;
+						pageNumber++;
+					}
+				}
 			}
-		}
+
+			b.close();
+			is.close();
+
+		}while(morePages);
 
 		System.out.println("Found " + list.size() + " performances");
 
-		b.close();
-		is.close();
 
 		String pdfUrl = "https://bb.ringingworld.co.uk/pdf.php?id=";
 		for(String id : list){
