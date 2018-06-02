@@ -37,11 +37,14 @@ public class Scraper {
 			}
 		}
 
+		System.out.println("Found " + list.size() + " performances");
+
 		b.close();
 		is.close();
 
 		String pdfUrl = "https://bb.ringingworld.co.uk/pdf.php?id=";
 		for(String id : list){
+			System.out.println("Downloading " + id);
 			URL pdf = new URL(pdfUrl + id);
 			File f = new File(downloadLocation + "/" + id + ".pdf");
 
