@@ -15,7 +15,7 @@ public class Scraper {
 
 	public Scraper(String url, String downloadLocation) {
 		this.downloadLocation = downloadLocation;
-		this.url = url;
+		this.url = url.replace("http://", "https://");
 	}
 
 	public void scrape() throws IOException {
