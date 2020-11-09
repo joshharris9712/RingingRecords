@@ -24,37 +24,46 @@ public class Scraper {
 		int pageNumber = 1;
 
 		URL u;
+		u = new URL(url);
 		InputStreamReader is = null;
 		BufferedReader b;
 		List<String> list = new ArrayList<String>();
-
+		System.out.println("Starting to loop through");
 		do {
 			morePages = false;
 			u = new URL(url + (pageNumber>1? "&page=" + pageNumber : ""));
-
 			is = new InputStreamReader(u.openStream());
 			b = new BufferedReader(is);
 
 			String inputLine;
 
 			while ((inputLine = b.readLine()) != null) {
-				if (inputLine.contains("href=\"view.php?id=")) {
+				System.out.println(inputLine);
+				if (inputLine.contains("href=\"/view.php?id=")) {
+					System.out.println("Found Performance");
 					String id = inputLine.substring(inputLine.indexOf("id=") + 3, inputLine.lastIndexOf('"'));
 					list.add(id);
+					System.out.println("List++");
 				}
 
 				if (inputLine.contains("page=")) {
 					String numStr = inputLine.substring(inputLine.indexOf("page=") + 5, inputLine.lastIndexOf('"'));
-					if(Integer.valueOf(numStr) > pageNumber){
-						morePages = true;
-						pageNumber++;
+					System.out.println(numStr);
+					try {
+						if (Integer.valueOf(numStr) > pageNumber) {
+							morePages = true;
+							pageNumber++;
+							System.out.println("Page++");
+						}
+					}catch (Exception e){
+						// Lazy way of circumventing error on multiple pages
 					}
 				}
 			}
-
-			b.close();
+			System.out.println("Closing Buffer Stream");
 			is.close();
-
+			b.close();
+			System.out.println("Finishing if no more pages");
 		}while(morePages);
 
 		System.out.println("Found " + list.size() + " performances");

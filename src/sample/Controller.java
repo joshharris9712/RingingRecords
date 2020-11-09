@@ -37,6 +37,7 @@ public class Controller {
 	void go(ActionEvent event) {
 		defaultPane.setDisable(true);
 		loadingPane.setVisible(true);
+		System.out.println("Starting the webscraper");
 		new Thread(new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
@@ -45,6 +46,7 @@ public class Controller {
 				try {
 					s.scrape();
 				} catch (IOException e){
+					System.err.println(e);
 					Platform.runLater(() -> {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
 						alert.setTitle("Error");
